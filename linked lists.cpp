@@ -31,8 +31,6 @@ public:
     void printList(Node* n){
         while (n != NULL){
             cout << n->Value << " ";
-//            cout << endl;
-//            cout << n << endl;
             n = n->Next;
         }
     }
@@ -139,25 +137,3 @@ public:
     }
 
 };
-
-
-
-
-
-//int main(){
-//    LinkedList* list = new LinkedList();
-//    int toAdd[10] = {100,112,1654,2,89,16,17,3,1,4};
-////    list->pushToEnd(&list->head, 1);
-////    list->pushToEnd(&list->head, 2);
-////    list->pushToEnd(&list->head, 3);
-////    list->pushToEnd(&list->head, 4);
-////    list->pushToEnd(&list->head, 5);
-////    list->pushToEnd(&list->head, 6);
-////    list->pushToEnd(&list->head, 7);
-////    list->pushToEnd(&list->head, 8);
-////    list->pushToStart(&list->head, 0);
-////    list->pushAfterIndex(3, 9, &list->head);
-////    list->printList(list->head);
-//    list->pushArrayToEnd(toAdd, 10, &list->head);
-//    list->printList(list->head);
-//}
