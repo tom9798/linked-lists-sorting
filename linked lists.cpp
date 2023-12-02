@@ -22,11 +22,9 @@ public:
 class LinkedList {
 public:
     Node* head;
-    Node* tail;
     int length;
     LinkedList(){
         this->head = NULL;
-        this->tail = NULL;
         this->length = 0;
     }
 
