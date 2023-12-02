@@ -6,7 +6,11 @@ LinkedList* generateRandomLinkedList(int size){ //generates random linked list
     LinkedList *arr = new LinkedList();
     int i;
     for (i = 0; i < size; i++) {
-        arr->pushToEnd(&arr->head, rand() % 10000);
+        Node*temp = new Node();
+        temp->Value = rand() % 10000;
+        temp->Next = arr->head;
+        arr->head = temp;
+//        arr->pushToEnd(&arr->head, rand() % 10000);
     }
     return arr;
 }
@@ -228,8 +232,8 @@ Node* countingSort(Node** head, int exp, LinkedList* newList) { //counting sort
             }
         }
     }
-    newList->printList(newList->head); //printing the list after each iteration to see the progress (optional)
-    printf("\n");
+//    newList->printList(newList->head); //printing the list after each iteration to see the progress (optional)
+//    printf("\n");
     return newList->head;
 }
 
@@ -247,15 +251,16 @@ Node* driver (Node** head){
     maxNum = 0;
     return tempo->head;
 }
-
+LinkedList* arr = generateRandomLinkedList(1000000);
 int main() {
-    printf("start generating random linked list: \n");
-    LinkedList* arr = generateRandomLinkedList(100);
-    arr->printList(arr->head);
-    printf("\n\nstart sorting: \n");
-    driver(&arr->head);
+//    printf("start generating random linked list: \n");
 
-    printf("\nfinished sorting: \n");
-    arr->printList(arr->head);
+//    arr->printList(arr->head);
+    printf("\n\nstart sorting: \n");
+    clock_t start = clock();
+    driver(&arr->head);
+    clock_t end = clock();
+    printf("\nfinished sorting in: %ld\n", (end-start)/CLOCKS_PER_SEC);
+//    arr->printList(arr->head);
     return 0;
 }
