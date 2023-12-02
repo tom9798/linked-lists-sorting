@@ -216,13 +216,13 @@ Node* countingSort(Node** head, int exp, LinkedList* newList) { //counting sort
     for (i = 0; i < 9; i++) { //connecting the lists
         if (starts[i] != NULL) {
             if (first) {
-                newList->head = starts[i];
+                newList->head = starts[i]; //saving the first node of the new list, so we can return the head
                 first = false;
             }
             for (j = i+1; j < 10; j++) {
                 if (starts[j] != NULL) {
                     ends[i]->Next = starts[j];
-                    ends[j]->Next = NULL;
+                    ends[j]->Next = NULL; //making sure the last node is NULL so the list won't be infinite
                     break;
                 }
             }
