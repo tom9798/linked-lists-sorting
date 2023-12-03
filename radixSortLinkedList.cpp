@@ -1,5 +1,9 @@
 #include "linked lists.cpp"
-#include <math.h>
+#include <cmath>
+#include <iostream>
+#include <thread>
+#include <vector>
+
 using namespace std;
 
 LinkedList* generateRandomLinkedList(int size){ //generates random linked list
@@ -7,7 +11,7 @@ LinkedList* generateRandomLinkedList(int size){ //generates random linked list
     int i;
     for (i = 0; i < size; i++) {
         Node*temp = new Node();
-        temp->Value = rand() % 10000;
+        temp->Value = rand() % 1000;
         temp->Next = arr->head;
         arr->head = temp;
 //        arr->pushToEnd(&arr->head, rand() % 10000);
@@ -15,28 +19,11 @@ LinkedList* generateRandomLinkedList(int size){ //generates random linked list
     return arr;
 }
 
-//I know it looks bad, but it's pretty cheap comparing to other options
-Node* zero = NULL;
-Node* one = NULL;
-Node* two = NULL;
-Node* three = NULL;
-Node* four = NULL;
-Node* five = NULL;
-Node* six = NULL;
-Node* seven = NULL;
-Node* eight = NULL;
-Node* nine = NULL;
-
-Node* initial0 = NULL;
-Node* initial1 = NULL;
-Node* initial2 = NULL;
-Node* initial3 = NULL;
-Node* initial4 = NULL;
-Node* initial5 = NULL;
-Node* initial6 = NULL;
-Node* initial7 = NULL;
-Node* initial8 = NULL;
-Node* initial9 = NULL;
+Node* endings[10] = {new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node};
+Node* starts[10] = {new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node};
+// I could've used a linked list, but it would take longer. I know that each list will be 10 nodes because it's only for each digit, which is not that expansive memory-wise when comparing to big lists,
+//and a lot quicker when accessing the nodes, because I don't have to iterate through the list to get to the last node, I can just access it by its index (happens each iteration).
+//plus it doesn't need to be created each iteration, it's always the same order, the nodes contain the data.
 
 int digit(int num, int exp){ //returns digit of a number by its exponent
     int toDevide = pow(10, exp);
@@ -44,176 +31,104 @@ int digit(int num, int exp){ //returns digit of a number by its exponent
     return digit;
 }
 
-void reset(){ //resets all the pointers
-    zero = NULL;
-    one = NULL;
-    two = NULL;
-    three = NULL;
-    four = NULL;
-    five = NULL;
-    six = NULL;
-    seven = NULL;
-    eight = NULL;
-    nine = NULL;
-
-    initial0 = NULL;
-    initial1 = NULL;
-    initial2 = NULL;
-    initial3 = NULL;
-    initial4 = NULL;
-    initial5 = NULL;
-    initial6 = NULL;
-    initial7 = NULL;
-    initial8 = NULL;
-    initial9 = NULL;
+void resetDriver(Node* start[], Node* end[], int i){ //resets all the pointers
+    start[i] = NULL;
+    end[i] = NULL;
 }
 
-void distribute(Node* temp, int digiti){ //distributes nodes by their digit
-    switch (digiti) {
-        case 0:
-            if (zero == NULL) { //if the list is empty - initialize it with the new node and save the first node, so we can connect it later
-                zero = temp;
-                initial0 = zero;
-                break;
-            } else { //if the list is not empty - connect the last node to the new node, and save the new node as the last node
-                zero->Next = temp;
-                zero = zero->Next;
-                break;
-            }
-
-        case 1:
-            if (one == NULL) {
-                one = temp;
-                initial1 = one;
-                break;
-            } else {
-                one->Next = temp;
-                one = one->Next;
-                break;
-            }
-
-        case 2:
-            if (two == NULL) {
-                two = temp;
-                initial2 = two;
-                break;
-            } else {
-                two->Next = temp;
-                two = two->Next;
-                break;
-            }
-
-        case 3:
-            if (three == NULL) {
-                three = temp;
-                initial3 = three;
-                break;
-            } else {
-                three->Next = temp;
-                three = three->Next;
-                break;
-            }
-
-        case 4:
-            if (four == NULL) {
-                four = temp;
-                initial4 = four;
-                break;
-            } else {
-                four->Next = temp;
-                four = four->Next;
-                break;
-            }
-
-        case 5:
-            if (five == NULL) {
-                five = temp;
-                initial5 = five;
-                break;
-            } else {
-                five->Next = temp;
-                five = five->Next;
-                break;
-            }
-
-        case 6:
-            if (six == NULL) {
-                six = temp;
-                initial6 = six;
-                break;
-            } else {
-                six->Next = temp;
-                six = six->Next;
-                break;
-            }
-
-        case 7:
-            if (seven == NULL) {
-                seven = temp;
-                initial7 = seven;
-                break;
-            } else {
-                seven->Next = temp;
-                seven = seven->Next;
-                break;
-            }
-
-        case 8:
-            if (eight == NULL) {
-                eight = temp;
-                initial8 = eight;
-                break;
-            } else {
-                eight->Next = temp;
-                eight = eight->Next;
-                break;
-            }
-
-        case 9:
-            if (nine == NULL) {
-                nine = temp;
-                initial9 = nine;
-                break;
-            } else {
-                nine->Next = temp;
-                nine = nine->Next;
-                break;
-            }
+void reset(Node* start[], Node* end[]){ //resets all the pointers
+    int num_threads = 10;
+    std::vector<std::thread> threads;
+    for (int i = 0; i < num_threads; i++) {
+        threads.push_back(std::thread(resetDriver, start, end, i));
+    }
+    for (auto& t : threads) {
+        t.join();
     }
 }
 
+//void connectingListsDriver(int i,int max){
+//    if (starts[i] != NULL) {
+//        for (int j = i+1; j < 10; j++) {
+//            if (starts[j] != NULL) {
+//                endings[i]->Next = starts[j];
+//                if (endings[j]->Value == max) {
+//                    endings[j]->Next = NULL;
+//                }
+//                break;
+//            }
+//        }
+//    }
+//}
+//
+//void connectingLists(LinkedList* arr, int max){ //connects the lists using threads
+//    int num_threads = 9;
+//    std::vector<std::thread> threads;
+//    int i;
+//    for (i = 0; i < 10; i++) {
+//        if (starts[i] != NULL) {
+//            arr->head = starts[i]; //saving the first node of the new list, so we can return the head
+//            break;
+//        }
+//    }
+//    for (i; i < num_threads; i++) {
+//        if (starts[i] != NULL) {
+//            threads.push_back(std::thread(connectingListsDriver, i, max));
+//        }
+//    }
+//    for (auto& t : threads) {
+//        t.join();
+//    }
+//}
+
 int countExp = 0; //static variables for the counting sort, in bigger lists it saves a lot of iterations
 int maxNum = 0;
-
+//int maxExp = 0; //for the threads option
+//int maxDigit = 0;
 Node* countingSort(Node** head, int exp, LinkedList* newList) { //counting sort
-    reset();
+    reset(starts, endings); //resetting the pointers
     Node *temp = *head;
     newList->head = *head;
     while (temp->Next != NULL) { //counting
         if (countExp == 0 && temp->Value > maxNum) { //getting the max number
             maxNum = temp->Value;
         }
+        //distributing the nodes
         int digiti = digit(temp->Value, exp); // sorry for the bad variable names
-        distribute(temp, digiti);
+        if(endings[digiti] == NULL){ //if it's the first node of the list, initialize it
+            endings[digiti] = temp;
+            starts[digiti] = endings[digiti];
+        }else{
+            endings[digiti]->Next = temp;
+            endings[digiti] = endings[digiti]->Next;
+        }
+//        if (digiti >= maxDigit) { //getting the max digit, for the threads option
+//            maxDigit = digiti;
+//            maxExp = temp->Value;
+//        }
         temp = temp->Next;
     }
+
+    //distributing the last node
+    int digiti = digit(temp->Value, exp);
+    if(endings[digiti] == NULL){
+        endings[digiti] = temp;
+        starts[digiti] = endings[digiti];
+    }else{
+        endings[digiti]->Next = temp;
+        endings[digiti] = endings[digiti]->Next;
+    }
+
     if (countExp == 0) { //getting the max exponent
         if (temp->Value > maxNum) {
             maxNum = temp->Value;
         }
-        while (maxNum > 0) { //that'll happen only once
-            maxNum = maxNum / 10;
+        int maxNumTemp = maxNum;
+        while (maxNumTemp > 0) { //that'll happen only once
+            maxNumTemp = maxNumTemp / 10;
             countExp++;
         }
     }
-    int digiti = digit(temp->Value, exp); //distributing the last node
-    distribute(temp, digiti);
-
-    Node* ends[10] = {zero, one, two, three, four, five, six, seven, eight, nine}; //array of the last nodes of each list
-    Node* starts[10] = {initial0, initial1, initial2, initial3, initial4, initial5, initial6, initial7, initial8, initial9}; //array of the first nodes of each list
-    // I could've used a linked list, but it would take longer. I know that each list will be 10 nodes because it's only for each digit, which is not that expansive memory-wise when comparing to big lists,
-    //and a lot quicker when accessing the nodes, because I don't have to iterate through the list to get to the last node, I can just access it by its index (happens each iteration).
-    //plus it doesn't need to be created each iteration, it's always the same order, the nodes contain the data.
 
     bool first = true;
     int i, j;
@@ -225,40 +140,48 @@ Node* countingSort(Node** head, int exp, LinkedList* newList) { //counting sort
             }
             for (j = i+1; j < 10; j++) {
                 if (starts[j] != NULL) {
-                    ends[i]->Next = starts[j];
-                    ends[j]->Next = NULL; //making sure the last node is NULL so the list won't be infinite
+                    endings[i]->Next = starts[j];
+                    endings[j]->Next = NULL; //making sure the last node is NULL so the list won't be infinite
                     break;
                 }
             }
         }
     }
+
+//    connectingLists(newList, maxExp); //connecting the lists using threads option, not really faster int this case because the lists are small
+//    maxExp = 0;
+//    maxDigit = 0;
+
 //    newList->printList(newList->head); //printing the list after each iteration to see the progress (optional)
 //    printf("\n");
     return newList->head;
 }
 
-Node* driver (Node** head){
+Node* driver (LinkedList* arr){
     LinkedList *tempo = new LinkedList();
     int exp = 0;
-    Node* temp = *head;
+    Node* temp = arr->head;
     temp = countingSort(&temp, exp, tempo); //first iteration, getting the max exponent
     exp++;
     while (exp<countExp){ //sorting by each exponent
         temp = countingSort(&temp, exp, tempo);
         exp++;
     }
+
+
     countExp = 0; //resetting the static variables, so the function can be called again
     maxNum = 0;
+
+    arr->head = tempo->head;
     return tempo->head;
 }
-LinkedList* arr = generateRandomLinkedList(1000000);
-int main() {
-//    printf("start generating random linked list: \n");
 
+LinkedList* arr = generateRandomLinkedList(1000);
+int main() {
 //    arr->printList(arr->head);
     printf("\n\nstart sorting: \n");
     clock_t start = clock();
-    driver(&arr->head);
+    driver(arr);
     clock_t end = clock();
     printf("\nfinished sorting in: %ld\n", (end-start)/CLOCKS_PER_SEC);
 //    arr->printList(arr->head);
