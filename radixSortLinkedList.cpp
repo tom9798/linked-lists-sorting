@@ -6,7 +6,7 @@
 
 using namespace std;
 
-LinkedList* generateRandomLinkedList(int size){ //generates random linked list
+LinkedList* generateRandomLinkedList(int size){ //generates a random linked list
     LinkedList *arr = new LinkedList();
     int i;
     for (i = 0; i < size; i++) {
@@ -21,8 +21,8 @@ LinkedList* generateRandomLinkedList(int size){ //generates random linked list
 
 Node* endings[10] = {new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node};
 Node* starts[10] = {new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node, new Node};
-// I could've used a linked list, but it would take longer. I know that each list will be 10 nodes because it's only for each digit, which is not that expansive memory-wise when comparing to big lists,
-//and a lot quicker when accessing the nodes, because I don't have to iterate through the list to get to the last node, I can just access it by its index (happens each iteration).
+// I could've used a linked list, but it would take longer. I know that each list will be 10 nodes because it's only for each digit, which is not that expansive memory-wise when comparing to big lists.
+//Plus it's a lot quicker when accessing the nodes, because I don't have to iterate through the list to get to the last node, I can just access it by its index (happens each iteration).
 //plus it doesn't need to be created each iteration, it's always the same order, the nodes contain the data.
 
 int digit(int num, int exp){ //returns digit of a number by its exponent
@@ -46,40 +46,6 @@ void reset(Node* start[], Node* end[]){ //resets all the pointers
         t.join();
     }
 }
-
-//void connectingListsDriver(int i,int max){
-//    if (starts[i] != NULL) {
-//        for (int j = i+1; j < 10; j++) {
-//            if (starts[j] != NULL) {
-//                endings[i]->Next = starts[j];
-//                if (endings[j]->Value == max) {
-//                    endings[j]->Next = NULL;
-//                }
-//                break;
-//            }
-//        }
-//    }
-//}
-//
-//void connectingLists(LinkedList* arr, int max){ //connects the lists using threads
-//    int num_threads = 9;
-//    std::vector<std::thread> threads;
-//    int i;
-//    for (i = 0; i < 10; i++) {
-//        if (starts[i] != NULL) {
-//            arr->head = starts[i]; //saving the first node of the new list, so we can return the head
-//            break;
-//        }
-//    }
-//    for (i; i < num_threads; i++) {
-//        if (starts[i] != NULL) {
-//            threads.push_back(std::thread(connectingListsDriver, i, max));
-//        }
-//    }
-//    for (auto& t : threads) {
-//        t.join();
-//    }
-//}
 
 int countExp = 0; //static variables for the counting sort, in bigger lists it saves a lot of iterations
 int maxNum = 0;
@@ -147,13 +113,6 @@ Node* countingSort(Node** head, int exp, LinkedList* newList) { //counting sort
             }
         }
     }
-
-//    connectingLists(newList, maxExp); //connecting the lists using threads option, not really faster int this case because the lists are small
-//    maxExp = 0;
-//    maxDigit = 0;
-
-//    newList->printList(newList->head); //printing the list after each iteration to see the progress (optional)
-//    printf("\n");
     return newList->head;
 }
 
@@ -168,7 +127,6 @@ Node* driver (LinkedList* arr){
         exp++;
     }
 
-
     countExp = 0; //resetting the static variables, so the function can be called again
     maxNum = 0;
 
@@ -176,7 +134,7 @@ Node* driver (LinkedList* arr){
     return tempo->head;
 }
 
-LinkedList* arr = generateRandomLinkedList(1000);
+LinkedList* arr = generateRandomLinkedList(1000000);
 int main() {
 //    arr->printList(arr->head);
     printf("\n\nstart sorting: \n");
@@ -184,6 +142,5 @@ int main() {
     driver(arr);
     clock_t end = clock();
     printf("\nfinished sorting in: %ld\n", (end-start)/CLOCKS_PER_SEC);
-//    arr->printList(arr->head);
     return 0;
 }
